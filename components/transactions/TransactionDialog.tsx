@@ -31,6 +31,43 @@ interface TransactionDialogProps {
   onSuccess: () => void
 }
 
+// Converte valor digitado em formato BR para número
+// Aceita: "5.000", "5.000,50", "5000", "5000,50", "5,99"
+function parseBRAmount(raw: string): number {
+  const s = raw.trim()
+  if (!s) return NaN
+
+  // Se tem vírgula: ponto é separador de milhar, vírgula é decimal
+  if (s.includes(',')) {
+    const normalized = s.replace(/\./g, '').replace(',', '.')
+    return parseFloat(normalized)
+  }
+
+  // Sem vírgula: ponto pode ser milhar (5.000) ou decimal (5.5)
+  // Se tem ponto com exatamente 3 dígitos após → milhar (5.000 = 5000)
+  // Caso contrário trata como decimal (5.5 = 5,50)
+  if (s.includes('.')) {
+    const parts = s.split('.')
+    const lastPart = parts[parts.length - 1]
+    if (lastPart.length === 3) {
+      // ponto de milhar: remove todos os pontos
+      return parseFloat(s.replace(/\./g, ''))
+    }
+    // ponto decimal (ex: 5.5)
+    return parseFloat(s)
+  }
+
+  return parseFloat(s)
+}
+
+// Formata o número de volta para exibição no campo ao editar transação existente
+function formatAmountForInput(amount: number): string {
+  return amount.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })
+}
+
 const EMPTY_FORM = {
   description: '',
   amount: '',
@@ -54,7 +91,7 @@ export function TransactionDialog({
     if (transaction) {
       setForm({
         description: transaction.description,
-        amount: String(transaction.amount),
+        amount: formatAmountForInput(Number(transaction.amount)),
         date: transaction.date,
         type: transaction.type,
         category: transaction.category,
@@ -65,6 +102,15 @@ export function TransactionDialog({
     setError('')
   }, [transaction, open])
 
+  // Permite apenas dígitos, ponto e vírgula no campo de valor
+  function handleAmountChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value
+    // Permite: números, ponto (milhar) e vírgula (decimal)
+    if (/^[\d.,]*$/.test(value)) {
+      setForm({ ...form, amount: value })
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -74,9 +120,9 @@ export function TransactionDialog({
       return
     }
 
-    const amount = parseFloat(form.amount.replace(',', '.'))
+    const amount = parseBRAmount(form.amount)
     if (isNaN(amount) || amount <= 0) {
-      setError('Informe um valor válido maior que zero.')
+      setError('Informe um valor válido maior que zero. Ex: 1.500,00 ou 150,99')
       return
     }
 
@@ -152,15 +198,21 @@ export function TransactionDialog({
 
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="amount">Valor (R$)</Label>
+              <Label htmlFor="amount">
+                Valor (R$)
+              </Label>
               <Input
                 id="amount"
-                placeholder="0,00"
+                placeholder="Ex: 1.500,00"
                 value={form.amount}
-                onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                onChange={handleAmountChange}
                 required
-                inputMode="decimal"
+                inputMode="text"
+                autoComplete="off"
               />
+              <p className="text-xs text-muted-foreground -mt-0.5">
+                Use vírgula para centavos
+              </p>
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="date">Data</Label>
