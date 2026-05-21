@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Wallet, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -36,7 +37,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4 relative">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <Link href="/" className="flex items-center gap-2 mb-6">

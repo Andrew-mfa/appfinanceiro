@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Wallet, Loader2, CheckCircle2 } from 'lucide-react'
+import { Wallet, Loader2, Mail, AlertTriangle, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function RegisterPage() {
@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [registeredEmail, setRegisteredEmail] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
@@ -49,22 +50,68 @@ export default function RegisterPage() {
       return
     }
 
+    setRegisteredEmail(email)
     setSuccess(true)
     setLoading(false)
-
-    setTimeout(() => router.push('/login'), 3000)
   }
 
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
-        <div className="w-full max-w-sm text-center">
-          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle2 className="w-8 h-8 text-green-600" />
+        <div className="w-full max-w-sm">
+          {/* Card principal */}
+          <div className="bg-card border border-border/60 rounded-2xl p-6 shadow-sm text-center">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Mail className="w-8 h-8 text-primary" />
+            </div>
+
+            <h2 className="text-xl font-bold mb-1">Confirme seu e-mail</h2>
+            <p className="text-muted-foreground text-sm mb-5">
+              Enviamos um link de confirmação para:
+            </p>
+            <div className="bg-muted rounded-lg px-4 py-2.5 mb-5">
+              <p className="font-medium text-sm break-all">{registeredEmail}</p>
+            </div>
+
+            <ol className="text-left flex flex-col gap-3 mb-5">
+              <li className="flex items-start gap-3 text-sm">
+                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                <span>Abra o seu e-mail e procure uma mensagem do <strong>FinançasPro</strong></span>
+              </li>
+              <li className="flex items-start gap-3 text-sm">
+                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                <span>Clique no botão <strong>"Confirmar e-mail"</strong> dentro da mensagem</span>
+              </li>
+              <li className="flex items-start gap-3 text-sm">
+                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                <span>Após confirmar, faça login com suas credenciais</span>
+              </li>
+            </ol>
+
+            {/* Aviso de spam */}
+            <div className="flex items-start gap-2.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-lg px-4 py-3 text-left mb-5">
+              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-800 dark:text-amber-300">
+                <strong>Não encontrou o e-mail?</strong> Verifique a pasta de <strong>Spam</strong> ou <strong>Lixo eletrônico</strong> — às vezes ele cai por lá.
+              </p>
+            </div>
+
+            <Link href="/login">
+              <Button className="w-full gap-2">
+                Ir para o login
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
-          <h2 className="text-xl font-bold mb-2">Conta criada!</h2>
-          <p className="text-muted-foreground text-sm">
-            Verifique seu e-mail para confirmar a conta. Você será redirecionado para o login.
+
+          <p className="text-center text-xs text-muted-foreground mt-4">
+            E-mail errado?{' '}
+            <button
+              onClick={() => setSuccess(false)}
+              className="text-primary font-medium hover:underline"
+            >
+              Voltar e corrigir
+            </button>
           </p>
         </div>
       </div>

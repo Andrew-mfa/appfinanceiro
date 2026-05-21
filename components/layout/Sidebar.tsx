@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { Wallet, LayoutDashboard, List, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -50,7 +51,11 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="px-3 pb-4">
+      <div className="px-3 pb-4 flex flex-col gap-1">
+        <div className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-muted-foreground">
+          <span>Tema</span>
+          <ThemeToggle />
+        </div>
         <Button
           variant="ghost"
           onClick={handleLogout}

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import {
   TrendingUp,
   PieChart,
@@ -63,7 +64,8 @@ export default function LandingPage() {
             </div>
             <span className="font-semibold text-lg">FinançasPro</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link href="/login">
               <Button variant="ghost" size="sm">Entrar</Button>
             </Link>
