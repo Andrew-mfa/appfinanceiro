@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { parseCSV } from '@/lib/parsers/csv-parser'
 import { parseOFX } from '@/lib/parsers/ofx-parser'
+import { parsePDF } from '@/lib/parsers/pdf-parser'
 import { type ParsedTransaction } from '@/lib/parsers/types'
 import { CATEGORIES, CATEGORY_COLORS, type Category } from '@/types'
 import { formatCurrency } from '@/lib/utils'
@@ -104,8 +105,8 @@ export function ImportClient({ userId }: ImportClientProps) {
     if (file.size > MAX_SIZE) { setError('Arquivo muito grande. Máximo 10 MB.'); return }
 
     const ext = file.name.split('.').pop()?.toLowerCase()
-    if (!['csv', 'ofx', 'qfx'].includes(ext ?? '')) {
-      setError('Formato não suportado. Use arquivos .csv ou .ofx')
+    if (!['csv', 'ofx', 'qfx', 'pdf'].includes(ext ?? '')) {
+      setError('Formato não suportado. Use arquivos .csv, .ofx ou .pdf')
       return
     }
 
@@ -115,14 +116,15 @@ export function ImportClient({ userId }: ImportClientProps) {
     setFileSize(file.size)
 
     try {
-      const text = await file.text()
-      await new Promise((r) => setTimeout(r, 600)) // feel of real processing
+      await new Promise((r) => setTimeout(r, 600))
 
       let parsed: ParsedTransaction[] = []
       if (ext === 'csv') {
-        parsed = parseCSV(text)
+        parsed = parseCSV(await file.text())
+      } else if (ext === 'pdf') {
+        parsed = await parsePDF(await file.arrayBuffer())
       } else {
-        parsed = parseOFX(text)
+        parsed = parseOFX(await file.text())
       }
 
       if (parsed.length === 0) {
@@ -305,10 +307,11 @@ export function ImportClient({ userId }: ImportClientProps) {
                   </p>
 
                   {/* File type badges */}
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 flex-wrap justify-center">
                     {[
+                      { ext: 'PDF', icon: FileText, desc: 'Extrato' },
                       { ext: 'CSV', icon: FileSpreadsheet, desc: 'Planilha' },
-                      { ext: 'OFX', icon: FileText, desc: 'Extrato' },
+                      { ext: 'OFX', icon: FileText, desc: 'Open Finance' },
                       { ext: 'QFX', icon: FileText, desc: 'Quicken' },
                     ].map(({ ext, icon: Icon, desc }) => (
                       <div key={ext} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/50 bg-card text-xs font-semibold text-muted-foreground">
@@ -327,7 +330,7 @@ export function ImportClient({ userId }: ImportClientProps) {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,.ofx,.qfx"
+              accept=".csv,.ofx,.qfx,.pdf"
               onChange={onFileChange}
               className="hidden"
             />
