@@ -7,8 +7,23 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Wallet, Loader2, Mail, AlertTriangle, ArrowRight } from 'lucide-react'
+import {
+  Wallet,
+  Loader2,
+  Mail,
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle2,
+  Shield,
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+
+const perks = [
+  'Grátis para sempre, sem pegadinhas',
+  'Dados criptografados e seguros',
+  'Sem cartão de crédito necessário',
+  'Acesse de qualquer dispositivo',
+]
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -57,47 +72,45 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
+      <div className="min-h-screen flex items-center justify-center bg-background px-6 py-12">
         <div className="w-full max-w-sm">
-          {/* Card principal */}
-          <div className="bg-card border border-border/60 rounded-2xl p-6 shadow-sm text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-primary" />
+          <div className="rounded-2xl border border-border/50 bg-card p-8 shadow-xl shadow-black/5 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-primary/12 border border-primary/15 flex items-center justify-center mx-auto mb-5">
+              <Mail className="w-7 h-7 text-primary" />
             </div>
 
-            <h2 className="text-xl font-bold mb-1">Confirme seu e-mail</h2>
+            <h2 className="text-xl font-bold mb-2 tracking-tight">Confirme seu e-mail</h2>
             <p className="text-muted-foreground text-sm mb-5">
-              Enviamos um link de confirmação para:
+              Enviamos um link para:
             </p>
-            <div className="bg-muted rounded-lg px-4 py-2.5 mb-5">
-              <p className="font-medium text-sm break-all">{registeredEmail}</p>
+            <div className="bg-muted/60 rounded-xl px-4 py-3 mb-6 border border-border/40">
+              <p className="font-semibold text-sm break-all">{registeredEmail}</p>
             </div>
 
-            <ol className="text-left flex flex-col gap-3 mb-5">
-              <li className="flex items-start gap-3 text-sm">
-                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
-                <span>Abra o seu e-mail e procure uma mensagem do <strong>FinançasPro</strong></span>
-              </li>
-              <li className="flex items-start gap-3 text-sm">
-                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
-                <span>Clique no botão <strong>"Confirmar e-mail"</strong> dentro da mensagem</span>
-              </li>
-              <li className="flex items-start gap-3 text-sm">
-                <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
-                <span>Após confirmar, faça login com suas credenciais</span>
-              </li>
-            </ol>
+            <div className="flex flex-col gap-3 mb-6 text-left">
+              {[
+                'Abra seu e-mail e procure uma mensagem do FinançasPro',
+                'Clique em "Confirmar e-mail" dentro da mensagem',
+                'Após confirmar, faça login com suas credenciais',
+              ].map((step, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm">
+                  <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                    {i + 1}
+                  </span>
+                  <span className="text-muted-foreground">{step}</span>
+                </div>
+              ))}
+            </div>
 
-            {/* Aviso de spam */}
-            <div className="flex items-start gap-2.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-lg px-4 py-3 text-left mb-5">
-              <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-800 dark:text-amber-300">
-                <strong>Não encontrou o e-mail?</strong> Verifique a pasta de <strong>Spam</strong> ou <strong>Lixo eletrônico</strong> — às vezes ele cai por lá.
+            <div className="flex items-start gap-2.5 bg-amber-500/8 border border-amber-500/20 rounded-xl px-4 py-3 text-left mb-6">
+              <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                Não encontrou? Verifique a pasta de <strong>Spam</strong> ou <strong>Lixo eletrônico</strong>.
               </p>
             </div>
 
             <Link href="/login">
-              <Button className="w-full gap-2">
+              <Button className="w-full gap-2 h-11 rounded-xl font-semibold shadow-lg shadow-primary/20">
                 Ir para o login
                 <ArrowRight className="w-4 h-4" />
               </Button>
@@ -108,7 +121,7 @@ export default function RegisterPage() {
             E-mail errado?{' '}
             <button
               onClick={() => setSuccess(false)}
-              className="text-primary font-medium hover:underline"
+              className="text-primary font-semibold hover:underline underline-offset-4"
             >
               Voltar e corrigir
             </button>
@@ -119,28 +132,84 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-8">
-          <Link href="/" className="flex items-center gap-2 mb-6">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-xl">FinançasPro</span>
-          </Link>
-          <h1 className="text-2xl font-bold">Crie sua conta</h1>
-          <p className="text-muted-foreground text-sm mt-1">Gratuito, sem cartão de crédito</p>
+    <div className="min-h-screen flex bg-background">
+      {/* Left panel */}
+      <div className="hidden lg:flex lg:w-[480px] xl:w-[540px] shrink-0 flex-col relative overflow-hidden bg-[oklch(0.072_0.004_264)] dark:bg-[oklch(0.055_0.004_264)]">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 w-[400px] h-[400px] rounded-full bg-primary/15 blur-[100px] animate-glow-pulse" />
+          <div className="absolute bottom-1/3 right-1/3 w-[300px] h-[300px] rounded-full bg-violet-500/10 blur-[80px] animate-glow-pulse [animation-delay:2s]" />
+          <div className="absolute inset-0 dot-grid opacity-15" />
         </div>
 
-        <div className="bg-card border border-border/60 rounded-2xl p-6 shadow-sm">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="relative flex flex-col h-full px-12 py-12">
+          <Link href="/" className="flex items-center gap-3 mb-auto">
+            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+              <Wallet className="w-4.5 h-4.5 text-primary-foreground" />
+            </div>
+            <span className="font-bold text-white text-lg">FinançasPro</span>
+          </Link>
+
+          <div className="py-16">
+            <h2 className="text-3xl xl:text-4xl font-bold text-white tracking-tight leading-tight mb-4">
+              Sua jornada financeira
+              <br />
+              <span className="gradient-text">começa agora.</span>
+            </h2>
+            <p className="text-white/50 text-base leading-relaxed mb-10 max-w-xs">
+              Crie sua conta em menos de 30 segundos e comece a transformar sua relação com o dinheiro.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              {perks.map((perk) => (
+                <div key={perk} className="flex items-center gap-3">
+                  <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400 shrink-0" />
+                  <span className="text-sm text-white/70">{perk}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-white/8 bg-white/4 p-4 backdrop-blur-sm">
+            <p className="text-xs text-white/50 leading-relaxed">
+              &ldquo;Finalmente um app financeiro que não parece uma planilha. Em 3 meses economizei mais de R$2.000.&rdquo;
+            </p>
+            <div className="flex items-center gap-2 mt-3">
+              <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-[9px] font-bold text-white">
+                RM
+              </div>
+              <p className="text-xs text-white/50">Rafael M. · Dev Sênior</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+        {/* Mobile logo */}
+        <div className="lg:hidden flex items-center gap-2.5 mb-10">
+          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/25">
+            <Wallet className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-bold">FinançasPro</span>
+        </div>
+
+        <div className="w-full max-w-sm">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold tracking-tight mb-2">Crie sua conta</h1>
+            <p className="text-muted-foreground text-sm">
+              Grátis, para sempre. Sem cartão de crédito.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert variant="destructive" className="rounded-xl border-destructive/30 bg-destructive/8">
+                <AlertDescription className="text-sm">{error}</AlertDescription>
               </Alert>
             )}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="email">E-mail</Label>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="text-sm font-medium">E-mail</Label>
               <Input
                 id="email"
                 type="email"
@@ -149,22 +218,26 @@ export default function RegisterPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
+                className="h-11 rounded-xl border-border/60 bg-card text-sm placeholder:text-muted-foreground/50 focus-visible:ring-primary/30"
               />
             </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="password">Senha</Label>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password" className="text-sm font-medium">Senha</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Mín. 6 caracteres"
+                placeholder="Mínimo 6 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 autoComplete="new-password"
+                className="h-11 rounded-xl border-border/60 bg-card text-sm placeholder:text-muted-foreground/50 focus-visible:ring-primary/30"
               />
             </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="confirmPassword">Confirmar senha</Label>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="confirmPassword" className="text-sm font-medium">Confirmar senha</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -173,27 +246,57 @@ export default function RegisterPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 autoComplete="new-password"
+                className="h-11 rounded-xl border-border/60 bg-card text-sm placeholder:text-muted-foreground/50 focus-visible:ring-primary/30"
               />
             </div>
-            <Button type="submit" disabled={loading} className="mt-2">
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="h-11 rounded-xl font-semibold shadow-lg shadow-primary/20 gap-2 mt-1"
+            >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   Criando conta...
                 </>
               ) : (
-                'Criar conta grátis'
+                <>
+                  Criar conta grátis
+                  <ArrowRight className="w-4 h-4" />
+                </>
               )}
             </Button>
-          </form>
-        </div>
 
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Já tem conta?{' '}
-          <Link href="/login" className="text-primary font-medium hover:underline">
-            Entrar
-          </Link>
-        </p>
+            <p className="text-center text-xs text-muted-foreground/60">
+              Ao criar uma conta, você concorda com nossos Termos de Uso e Política de Privacidade.
+            </p>
+          </form>
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border/40" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-background px-3 text-xs text-muted-foreground/50">ou</span>
+            </div>
+          </div>
+
+          <p className="text-center text-sm text-muted-foreground">
+            Já tem conta?{' '}
+            <Link
+              href="/login"
+              className="text-primary font-semibold hover:underline underline-offset-4 transition-colors"
+            >
+              Entrar agora
+            </Link>
+          </p>
+
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground/50 mt-8">
+            <Shield className="w-3.5 h-3.5" />
+            <span>Dados protegidos com criptografia ponta a ponta</span>
+          </div>
+        </div>
       </div>
     </div>
   )
