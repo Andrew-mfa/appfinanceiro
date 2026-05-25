@@ -14,12 +14,14 @@ import {
   FileBarChart,
   Sparkles,
   Settings,
+  Upload,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard',    label: 'Dashboard',  icon: LayoutDashboard },
   { href: '/transactions', label: 'Transações', icon: Receipt },
+  { href: '/import',       label: 'Importar',   icon: Upload },
 ]
 
 const comingSoonItems = [
