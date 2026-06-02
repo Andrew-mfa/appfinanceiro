@@ -78,16 +78,11 @@ export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [loading, setLoading] = useState<'pro' | 'ltd' | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
-  const [debugInfo, setDebugInfo] = useState<string | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
   // Verifica auth ao montar e dispara checkout pendente
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => {
-      const loggedIn = !!data.user
-      setIsLoggedIn(loggedIn)
-
-      if (loggedIn) {
+      if (data.user) {
         const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'ltd' | null
         if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
           sessionStorage.removeItem('pendingCheckout')
@@ -104,29 +99,22 @@ export default function PricingPage() {
   async function handleCheckout(plan: 'pro' | 'ltd') {
     setLoading(plan)
     setCheckoutError(null)
-    setDebugInfo(null)
 
-    // Verifica auth no cliente antes de chamar a API
     const { data: { user } } = await createClient().auth.getUser()
     if (!user) {
       sessionStorage.setItem('pendingCheckout', plan)
-      // Usa location.href para garantir reload completo e preservar cookies
       window.location.href = '/login'
       return
     }
 
     try {
-      setDebugInfo(`Autenticado (${user.email}) — criando sessão Stripe...`)
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan, annual }),
       })
 
-      setDebugInfo(`API: status ${res.status}`)
-
       const data = await res.json()
-      setDebugInfo(`Resposta: ${JSON.stringify(data).substring(0, 150)}`)
 
       if (!res.ok) {
         setCheckoutError(data.error ?? 'Erro ao iniciar checkout. Tente novamente.')
@@ -134,15 +122,12 @@ export default function PricingPage() {
       }
 
       if (data.url) {
-        setDebugInfo(`Abrindo Stripe: ${data.url.substring(0, 60)}...`)
         window.location.assign(data.url)
       } else {
-        setCheckoutError('Erro: URL de checkout não retornada pelo servidor.')
+        setCheckoutError('Erro ao iniciar checkout. Tente novamente.')
       }
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Erro desconhecido'
-      setCheckoutError(`Erro de conexão: ${msg}`)
-      setDebugInfo(`Exception: ${msg}`)
+    } catch {
+      setCheckoutError('Erro de conexão. Verifique sua internet e tente novamente.')
     } finally {
       setLoading(null)
     }
@@ -227,14 +212,6 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
-
-      {/* ── Debug temporário ───────────────────────────────────────── */}
-      <div className="max-w-2xl mx-auto px-6 mt-4">
-        <div className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-xs font-mono space-y-1">
-          <p>Logado: <strong>{isLoggedIn === null ? 'verificando...' : isLoggedIn ? 'SIM ✓' : 'NÃO ✗'}</strong></p>
-          {debugInfo && <p>Debug: {debugInfo}</p>}
-        </div>
-      </div>
 
       {/* ── Erro de checkout ───────────────────────────────────────── */}
       {checkoutError && (
