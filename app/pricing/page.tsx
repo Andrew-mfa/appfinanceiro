@@ -104,7 +104,7 @@ export default function PricingPage() {
       })
 
       if (res.status === 401) {
-        router.push(`/login?next=/pricing?checkout=${plan}`)
+        router.push(`/login?next=${encodeURIComponent(`/pricing?checkout=${plan}`)}`)
         return
       }
 
