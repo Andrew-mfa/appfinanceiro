@@ -81,13 +81,11 @@ export default function PricingPage() {
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
 
-  // Dispara checkout automático se o usuário voltou do login com ?checkout=pro|ltd
+  // Dispara checkout automático após login — lê plano do sessionStorage
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const pendingPlan = params.get('checkout') as 'pro' | 'ltd' | null
+    const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'ltd' | null
     if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
-      // Limpa o parâmetro da URL sem recarregar
-      window.history.replaceState({}, '', '/pricing')
+      sessionStorage.removeItem('pendingCheckout')
       handleCheckout(pendingPlan)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +102,8 @@ export default function PricingPage() {
       })
 
       if (res.status === 401) {
-        router.push(`/login?next=${encodeURIComponent(`/pricing?checkout=${plan}`)}`)
+        sessionStorage.setItem('pendingCheckout', plan)
+        router.push('/login')
         return
       }
 

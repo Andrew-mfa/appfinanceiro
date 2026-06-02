@@ -37,9 +37,8 @@ export default function LoginPage() {
       return
     }
 
-    const next = new URLSearchParams(window.location.search).get('next') ?? '/dashboard'
-    router.push(next)
-    router.refresh()
+    const hasPendingCheckout = sessionStorage.getItem('pendingCheckout')
+    router.push(hasPendingCheckout ? '/pricing' : '/dashboard')
   }
 
   return (
