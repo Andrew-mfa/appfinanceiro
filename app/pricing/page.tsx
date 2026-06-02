@@ -62,7 +62,7 @@ const faqs = [
   {
     question: 'O que é o Lifetime Deal (LTD)?',
     answer:
-      'O LTD é uma oferta de lançamento onde você paga uma única vez e tem acesso vitalício ao FinançasPro Pro, incluindo todas as atualizações futuras e suporte prioritário. É a melhor opção para quem quer o máximo sem mensalidade.',
+      'O LTD é uma oferta de lançamento onde você paga uma única vez e tem acesso vitalício ao Moneto Pro, incluindo todas as atualizações futuras e suporte prioritário. É a melhor opção para quem quer o máximo sem mensalidade.',
   },
   {
     question: 'Quais formas de pagamento são aceitas?',
@@ -137,7 +137,7 @@ export default function PricingPage() {
             <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
               <Wallet className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-base tracking-tight">FinançasPro</span>
+            <span className="font-semibold text-base tracking-tight">Moneto</span>
           </Link>
           <div className="flex items-center gap-2">
             <Link href="/login">
@@ -368,7 +368,7 @@ export default function PricingPage() {
             Garantia de 7 dias
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-7">
-            Experimente o FinançasPro Pro sem risco. Se não estiver satisfeito nos primeiros
+            Experimente o Moneto Pro sem risco. Se não estiver satisfeito nos primeiros
             7 dias, devolvemos 100% do seu dinheiro. Sem perguntas, sem burocracia.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground">
@@ -431,7 +431,7 @@ export default function PricingPage() {
               <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
                 <Wallet className="w-3.5 h-3.5 text-primary-foreground" />
               </div>
-              <span className="font-semibold">FinançasPro</span>
+              <span className="font-semibold">Moneto</span>
             </Link>
             <nav className="flex items-center gap-8 text-sm text-muted-foreground">
               <Link href="/" className="hover:text-foreground transition-colors">Início</Link>
@@ -439,7 +439,7 @@ export default function PricingPage() {
               <Link href="/register" className="hover:text-foreground transition-colors">Cadastrar</Link>
             </nav>
             <p className="text-xs text-muted-foreground/60">
-              © {new Date().getFullYear()} FinançasPro.
+              © {new Date().getFullYear()} Moneto.
             </p>
           </div>
         </div>

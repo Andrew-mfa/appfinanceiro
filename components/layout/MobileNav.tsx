@@ -53,7 +53,7 @@ export function MobileNav() {
           <Wallet className="w-3.5 h-3.5 text-primary-foreground" />
         </div>
         <div className="flex flex-col">
-          <span className="font-bold text-sm leading-none">FinançasPro</span>
+          <span className="font-bold text-sm leading-none">Moneto</span>
           <span className="text-[9px] text-muted-foreground/60 uppercase tracking-widest">Premium</span>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function MobileNav() {
                   <Wallet className="w-4 h-4 text-primary-foreground" />
                 </div>
                 <div>
-                  <p className="font-bold text-sm leading-none">FinançasPro</p>
+                  <p className="font-bold text-sm leading-none">Moneto</p>
                   <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest">Premium</p>
                 </div>
               </div>

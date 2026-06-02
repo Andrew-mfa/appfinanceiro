@@ -1,4 +1,4 @@
--- FinançasPro — Supabase Schema
+-- Moneto — Supabase Schema
 -- Execute este arquivo no SQL Editor do Supabase
 
 -- Tabela de transações

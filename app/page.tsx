@@ -132,7 +132,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
               <Wallet className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-base tracking-tight">FinançasPro</span>
+            <span className="font-semibold text-base tracking-tight">Moneto</span>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <a href="#features" className="hover:text-foreground transition-colors">Funcionalidades</a>
@@ -514,7 +514,7 @@ export default function LandingPage() {
               <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-sm">
                 <Wallet className="w-3.5 h-3.5 text-primary-foreground" />
               </div>
-              <span className="font-semibold">FinançasPro</span>
+              <span className="font-semibold">Moneto</span>
             </div>
 
             <nav className="flex items-center gap-8 text-sm text-muted-foreground">
@@ -525,7 +525,7 @@ export default function LandingPage() {
             </nav>
 
             <p className="text-xs text-muted-foreground/60">
-              © {new Date().getFullYear()} FinançasPro. Feito com Next.js e Supabase.
+              © {new Date().getFullYear()} Moneto. Feito com Next.js e Supabase.
             </p>
           </div>
         </div>

@@ -89,7 +89,7 @@ export default function RegisterPage() {
 
             <div className="flex flex-col gap-3 mb-6 text-left">
               {[
-                'Abra seu e-mail e procure uma mensagem do FinançasPro',
+                'Abra seu e-mail e procure uma mensagem do Moneto',
                 'Clique em "Confirmar e-mail" dentro da mensagem',
                 'Após confirmar, faça login com suas credenciais',
               ].map((step, i) => (
@@ -146,7 +146,7 @@ export default function RegisterPage() {
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
               <Wallet className="w-4.5 h-4.5 text-primary-foreground" />
             </div>
-            <span className="font-bold text-white text-lg">FinançasPro</span>
+            <span className="font-bold text-white text-lg">Moneto</span>
           </Link>
 
           <div className="py-16">
@@ -190,7 +190,7 @@ export default function RegisterPage() {
           <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/25">
             <Wallet className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-bold">FinançasPro</span>
+          <span className="font-bold">Moneto</span>
         </div>
 
         <div className="w-full max-w-sm">

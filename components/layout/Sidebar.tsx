@@ -49,7 +49,7 @@ export function Sidebar() {
           <Wallet className="w-4 h-4 text-primary-foreground" />
         </div>
         <div className="flex flex-col">
-          <span className="font-bold text-sm leading-tight text-sidebar-foreground">FinançasPro</span>
+          <span className="font-bold text-sm leading-tight text-sidebar-foreground">Moneto</span>
           <span className="text-[10px] text-muted-foreground/70 leading-tight font-medium uppercase tracking-widest">Premium</span>
         </div>
       </div>

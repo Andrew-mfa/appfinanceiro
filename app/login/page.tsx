@@ -59,7 +59,7 @@ export default function LoginPage() {
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
               <Wallet className="w-4.5 h-4.5 text-primary-foreground" />
             </div>
-            <span className="font-bold text-white text-lg">FinançasPro</span>
+            <span className="font-bold text-white text-lg">Moneto</span>
           </Link>
 
           {/* Content */}
@@ -111,7 +111,7 @@ export default function LoginPage() {
           <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/25">
             <Wallet className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-bold">FinançasPro</span>
+          <span className="font-bold">Moneto</span>
         </div>
 
         <div className="w-full max-w-sm">

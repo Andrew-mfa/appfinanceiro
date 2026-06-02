@@ -1,4 +1,4 @@
--- FinançasPro — Stripe Integration Migration
+-- Moneto — Stripe Integration Migration
 -- Execute no SQL Editor do Supabase (Dashboard → SQL Editor)
 
 -- Tabela de perfis com dados de assinatura
