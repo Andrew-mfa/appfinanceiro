@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import {
   Check,
@@ -77,6 +78,14 @@ export default function PricingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [loading, setLoading] = useState<'pro' | 'ltd' | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [debugInfo, setDebugInfo] = useState<string | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => {
+      setIsLoggedIn(!!data.user)
+    })
+  }, [])
 
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
@@ -94,20 +103,26 @@ export default function PricingPage() {
   async function handleCheckout(plan: 'pro' | 'ltd') {
     setLoading(plan)
     setCheckoutError(null)
+    setDebugInfo(null)
     try {
+      setDebugInfo(`Chamando API... (logado: ${isLoggedIn})`)
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan, annual }),
       })
 
+      setDebugInfo(`API respondeu: status ${res.status}`)
+
       if (res.status === 401) {
+        setDebugInfo('Não autenticado — redirecionando para login')
         sessionStorage.setItem('pendingCheckout', plan)
         router.push('/login')
         return
       }
 
       const data = await res.json()
+      setDebugInfo(`Resposta: ${JSON.stringify(data).substring(0, 120)}`)
 
       if (!res.ok) {
         setCheckoutError(data.error ?? 'Erro ao iniciar checkout. Tente novamente.')
@@ -115,12 +130,15 @@ export default function PricingPage() {
       }
 
       if (data.url) {
+        setDebugInfo(`Redirecionando para Stripe...`)
         window.location.href = data.url
       } else {
-        setCheckoutError('Erro: URL de checkout não retornada. Tente novamente.')
+        setCheckoutError('Erro: URL de checkout não retornada pelo servidor.')
       }
-    } catch {
-      setCheckoutError('Erro de conexão. Verifique sua internet e tente novamente.')
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Erro desconhecido'
+      setCheckoutError(`Erro de conexão: ${msg}`)
+      setDebugInfo(`Exception: ${msg}`)
     } finally {
       setLoading(null)
     }
@@ -205,6 +223,14 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Debug temporário ───────────────────────────────────────── */}
+      <div className="max-w-2xl mx-auto px-6 mt-4">
+        <div className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-xs font-mono space-y-1">
+          <p>Logado: <strong>{isLoggedIn === null ? 'verificando...' : isLoggedIn ? 'SIM ✓' : 'NÃO ✗'}</strong></p>
+          {debugInfo && <p>Debug: {debugInfo}</p>}
+        </div>
+      </div>
 
       {/* ── Erro de checkout ───────────────────────────────────────── */}
       {checkoutError && (
