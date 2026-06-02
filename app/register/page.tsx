@@ -19,9 +19,9 @@ import {
 import { createClient } from '@/lib/supabase/client'
 
 const perks = [
-  'Grátis para sempre, sem pegadinhas',
+  'Plano gratuito disponível, sem cartão',
   'Dados criptografados e seguros',
-  'Sem cartão de crédito necessário',
+  'Upgrade para Pro quando quiser',
   'Acesse de qualquer dispositivo',
 ]
 
@@ -197,7 +197,7 @@ export default function RegisterPage() {
           <div className="mb-8">
             <h1 className="text-2xl font-bold tracking-tight mb-2">Crie sua conta</h1>
             <p className="text-muted-foreground text-sm">
-              Grátis, para sempre. Sem cartão de crédito.
+              Comece no plano gratuito. Sem cartão de crédito.
             </p>
           </div>
 
