@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Moneto — Gestão Financeira Pessoal com IA',
   description: 'O controle financeiro mais elegante do Brasil. Gerencie receitas, despesas e metas com inteligência artificial. Comece grátis.',
-  metadataBase: new URL('https://appfinanceiro-kappa.vercel.app'),
+  metadataBase: new URL('https://moneto.com.br'),
   openGraph: {
     title: 'Moneto — Gestão Financeira com IA',
     description: 'Controle suas finanças com um dashboard bonito, insights de IA e relatórios automáticos. Plano gratuito disponível.',
-    url: 'https://appfinanceiro-kappa.vercel.app',
+    url: 'https://moneto.com.br',
     siteName: 'Moneto',
     locale: 'pt_BR',
     type: 'website',
