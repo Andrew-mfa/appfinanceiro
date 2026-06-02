@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,7 +18,6 @@ const features = [
 
 export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -38,7 +37,7 @@ export default function LoginPage() {
       return
     }
 
-    const next = searchParams.get('next') ?? '/dashboard'
+    const next = new URLSearchParams(window.location.search).get('next') ?? '/dashboard'
     router.push(next)
     router.refresh()
   }
