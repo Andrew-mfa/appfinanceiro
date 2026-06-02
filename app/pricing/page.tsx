@@ -81,48 +81,53 @@ export default function PricingPage() {
   const [debugInfo, setDebugInfo] = useState<string | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
 
+  // Verifica auth ao montar e dispara checkout pendente
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => {
-      setIsLoggedIn(!!data.user)
+      const loggedIn = !!data.user
+      setIsLoggedIn(loggedIn)
+
+      if (loggedIn) {
+        const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'ltd' | null
+        if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
+          sessionStorage.removeItem('pendingCheckout')
+          handleCheckout(pendingPlan)
+        }
+      }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
 
-  // Dispara checkout automático após login — lê plano do sessionStorage
-  useEffect(() => {
-    const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'ltd' | null
-    if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
-      sessionStorage.removeItem('pendingCheckout')
-      handleCheckout(pendingPlan)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   async function handleCheckout(plan: 'pro' | 'ltd') {
     setLoading(plan)
     setCheckoutError(null)
     setDebugInfo(null)
+
+    // Verifica auth no cliente antes de chamar a API
+    const { data: { user } } = await createClient().auth.getUser()
+    if (!user) {
+      setDebugInfo('Não autenticado — redirecionando para login')
+      sessionStorage.setItem('pendingCheckout', plan)
+      router.push('/login')
+      setLoading(null)
+      return
+    }
+
     try {
-      setDebugInfo(`Chamando API... (logado: ${isLoggedIn})`)
+      setDebugInfo(`Autenticado (${user.email}) — criando sessão Stripe...`)
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan, annual }),
       })
 
-      setDebugInfo(`API respondeu: status ${res.status}`)
-
-      if (res.status === 401) {
-        setDebugInfo('Não autenticado — redirecionando para login')
-        sessionStorage.setItem('pendingCheckout', plan)
-        router.push('/login')
-        return
-      }
+      setDebugInfo(`API: status ${res.status}`)
 
       const data = await res.json()
-      setDebugInfo(`Resposta: ${JSON.stringify(data).substring(0, 120)}`)
+      setDebugInfo(`Resposta: ${JSON.stringify(data).substring(0, 150)}`)
 
       if (!res.ok) {
         setCheckoutError(data.error ?? 'Erro ao iniciar checkout. Tente novamente.')
@@ -130,8 +135,8 @@ export default function PricingPage() {
       }
 
       if (data.url) {
-        setDebugInfo(`Redirecionando para Stripe...`)
-        window.location.href = data.url
+        setDebugInfo(`Abrindo Stripe: ${data.url.substring(0, 60)}...`)
+        window.location.assign(data.url)
       } else {
         setCheckoutError('Erro: URL de checkout não retornada pelo servidor.')
       }
