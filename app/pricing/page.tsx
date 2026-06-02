@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -81,6 +81,18 @@ export default function PricingPage() {
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
 
+  // Dispara checkout automático se o usuário voltou do login com ?checkout=pro|ltd
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const pendingPlan = params.get('checkout') as 'pro' | 'ltd' | null
+    if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
+      // Limpa o parâmetro da URL sem recarregar
+      window.history.replaceState({}, '', '/pricing')
+      handleCheckout(pendingPlan)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   async function handleCheckout(plan: 'pro' | 'ltd') {
     setLoading(plan)
     setCheckoutError(null)
@@ -92,7 +104,7 @@ export default function PricingPage() {
       })
 
       if (res.status === 401) {
-        router.push('/login?next=/pricing')
+        router.push(`/login?next=/pricing?checkout=${plan}`)
         return
       }
 
@@ -105,6 +117,8 @@ export default function PricingPage() {
 
       if (data.url) {
         window.location.href = data.url
+      } else {
+        setCheckoutError('Erro: URL de checkout não retornada. Tente novamente.')
       }
     } catch {
       setCheckoutError('Erro de conexão. Verifique sua internet e tente novamente.')
