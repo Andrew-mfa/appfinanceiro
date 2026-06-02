@@ -42,6 +42,18 @@ export const CATEGORIES: Category[] = [
   'Outros',
 ]
 
+export type Plan = 'free' | 'pro' | 'ltd'
+
+export interface UserProfile {
+  user_id: string
+  plan: Plan
+  stripe_customer_id: string | null
+  stripe_subscription_id: string | null
+  plan_expires_at: string | null
+  created_at: string
+  updated_at: string
+}
+
 export const CATEGORY_COLORS: Record<Category, string> = {
   Alimentação: '#f97316',
   Transporte: '#3b82f6',

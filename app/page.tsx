@@ -80,7 +80,7 @@ const steps = [
   {
     number: '01',
     title: 'Crie sua conta',
-    description: 'Cadastre-se em menos de 30 segundos. Sem cartão de crédito, sem pegadinhas.',
+    description: 'Cadastre-se em menos de 30 segundos. Comece no plano gratuito ou escolha o Pro.',
     icon: Zap,
   },
   {
@@ -138,6 +138,7 @@ export default function LandingPage() {
             <a href="#features" className="hover:text-foreground transition-colors">Funcionalidades</a>
             <a href="#how-it-works" className="hover:text-foreground transition-colors">Como funciona</a>
             <a href="#testimonials" className="hover:text-foreground transition-colors">Depoimentos</a>
+            <Link href="/pricing" className="hover:text-foreground transition-colors">Preços</Link>
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/login">
@@ -213,8 +214,8 @@ export default function LandingPage() {
           {/* Trust indicators */}
           <div className="flex flex-wrap items-center justify-center gap-5 text-sm text-muted-foreground">
             {[
-              { icon: CheckCircle2, text: 'Sem cartão de crédito' },
-              { icon: CheckCircle2, text: 'Grátis para sempre' },
+              { icon: CheckCircle2, text: 'Plano gratuito disponível' },
+              { icon: CheckCircle2, text: 'Sem cartão para começar' },
               { icon: Shield, text: 'Dados criptografados' },
             ].map(({ icon: Icon, text }) => (
               <span key={text} className="flex items-center gap-1.5">
@@ -371,6 +372,83 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Pricing teaser ────────────────────────────────────────── */}
+      <section className="py-28 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-sm font-medium text-primary uppercase tracking-widest mb-4">Planos</p>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-5">
+              Simples e transparente.
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+              Comece grátis. Faça upgrade para desbloquear IA, relatórios e metas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+            {[
+              {
+                name: 'Free',
+                price: 'R$0',
+                desc: 'Para sempre',
+                highlight: false,
+                items: ['30 transações/mês', 'Dashboard básico', '2 categorias'],
+              },
+              {
+                name: 'Pro',
+                price: 'R$24',
+                desc: '/mês',
+                highlight: true,
+                items: ['Transações ilimitadas', 'IA financeira', 'Exportar CSV', 'Metas'],
+              },
+              {
+                name: 'Lifetime',
+                price: 'R$197',
+                desc: 'pagamento único',
+                highlight: false,
+                items: ['Tudo do Pro', 'Acesso vitalício', 'Atualizações futuras'],
+              },
+            ].map((plan) => (
+              <div
+                key={plan.name}
+                className={`rounded-2xl border p-6 flex flex-col gap-4 ${
+                  plan.highlight
+                    ? 'border-[#1D9E75] bg-card shadow-[0_0_30px_#1D9E7520]'
+                    : 'border-border/50 bg-card'
+                }`}
+              >
+                <div>
+                  <p className={`text-xs font-semibold uppercase tracking-widest mb-2 ${plan.highlight ? 'text-[#1D9E75]' : 'text-muted-foreground'}`}>
+                    {plan.name}
+                  </p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-3xl font-bold">{plan.price}</span>
+                    <span className="text-muted-foreground text-sm pb-1">{plan.desc}</span>
+                  </div>
+                </div>
+                <ul className="space-y-2 flex-1">
+                  {plan.items.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#1D9E75] shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/pricing">
+              <Button variant="outline" className="gap-2 rounded-xl px-8">
+                Ver todos os detalhes
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── Final CTA ─────────────────────────────────────────────── */}
       <section className="py-28 px-6 relative overflow-hidden">
         <div className="absolute inset-0 -z-10">
@@ -389,7 +467,7 @@ export default function LandingPage() {
           </h2>
           <p className="text-muted-foreground text-lg mb-10 max-w-xl mx-auto leading-relaxed">
             Junte-se a mais de 10.000 pessoas que já transformaram sua relação com o dinheiro.
-            Grátis, seguro, sem complicações.
+            Plano gratuito disponível. Upgrade quando precisar.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
@@ -402,11 +480,20 @@ export default function LandingPage() {
                 <ArrowUpRight className="w-4 h-4" />
               </Button>
             </Link>
+            <Link href="/pricing">
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-base px-8 h-12 rounded-xl font-medium border-border/60 w-full sm:w-auto"
+              >
+                Ver planos e preços
+              </Button>
+            </Link>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
             {[
-              { icon: CheckCircle2, text: 'Sem cartão de crédito' },
+              { icon: CheckCircle2, text: 'Plano Free sem cartão' },
               { icon: CheckCircle2, text: 'Cancele quando quiser' },
               { icon: Shield, text: 'Dados seguros por padrão' },
             ].map(({ icon: Icon, text }) => (
@@ -433,6 +520,7 @@ export default function LandingPage() {
             <nav className="flex items-center gap-8 text-sm text-muted-foreground">
               <a href="#features" className="hover:text-foreground transition-colors">Funcionalidades</a>
               <a href="#how-it-works" className="hover:text-foreground transition-colors">Como funciona</a>
+              <Link href="/pricing" className="hover:text-foreground transition-colors">Preços</Link>
               <Link href="/login" className="hover:text-foreground transition-colors">Entrar</Link>
             </nav>
 
