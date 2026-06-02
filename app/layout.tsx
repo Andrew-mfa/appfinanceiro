@@ -14,8 +14,23 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'FinançasPro — Gestão Financeira Pessoal',
-  description: 'Controle suas finanças de forma simples e visual. Registre receitas e despesas, visualize gráficos por categoria e exporte relatórios.',
+  title: 'FinançasPro — Gestão Financeira Pessoal com IA',
+  description: 'O controle financeiro mais elegante do Brasil. Gerencie receitas, despesas e metas com inteligência artificial. Comece grátis.',
+  metadataBase: new URL('https://appfinanceiro-kappa.vercel.app'),
+  openGraph: {
+    title: 'FinançasPro — Gestão Financeira com IA',
+    description: 'Controle suas finanças com um dashboard bonito, insights de IA e relatórios automáticos. Plano gratuito disponível.',
+    url: 'https://appfinanceiro-kappa.vercel.app',
+    siteName: 'FinançasPro',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FinançasPro — Gestão Financeira com IA',
+    description: 'Controle suas finanças com dashboard bonito e insights de IA. Comece grátis.',
+  },
+  keywords: ['finanças pessoais', 'controle financeiro', 'gestão financeira', 'app financeiro', 'dashboard financeiro', 'IA financeira'],
 }
 
 export default function RootLayout({
