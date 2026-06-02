@@ -109,10 +109,9 @@ export default function PricingPage() {
     // Verifica auth no cliente antes de chamar a API
     const { data: { user } } = await createClient().auth.getUser()
     if (!user) {
-      setDebugInfo('Não autenticado — redirecionando para login')
       sessionStorage.setItem('pendingCheckout', plan)
-      router.push('/login')
-      setLoading(null)
+      // Usa location.href para garantir reload completo e preservar cookies
+      window.location.href = '/login'
       return
     }
 

@@ -38,7 +38,7 @@ export default function LoginPage() {
     }
 
     const hasPendingCheckout = sessionStorage.getItem('pendingCheckout')
-    router.push(hasPendingCheckout ? '/pricing' : '/dashboard')
+    window.location.href = hasPendingCheckout ? '/pricing' : '/dashboard'
   }
 
   return (
