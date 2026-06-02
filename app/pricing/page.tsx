@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   Crown,
   Loader2,
+  AlertCircle,
 } from 'lucide-react'
 
 const freeIncluded = [
@@ -75,12 +76,14 @@ export default function PricingPage() {
   const [annual, setAnnual] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [loading, setLoading] = useState<'pro' | 'ltd' | null>(null)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
 
   async function handleCheckout(plan: 'pro' | 'ltd') {
     setLoading(plan)
+    setCheckoutError(null)
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
@@ -94,9 +97,17 @@ export default function PricingPage() {
       }
 
       const data = await res.json()
-      if (data.url) window.location.href = data.url
+
+      if (!res.ok) {
+        setCheckoutError(data.error ?? 'Erro ao iniciar checkout. Tente novamente.')
+        return
+      }
+
+      if (data.url) {
+        window.location.href = data.url
+      }
     } catch {
-      // falha silenciosa — o usuário pode tentar novamente
+      setCheckoutError('Erro de conexão. Verifique sua internet e tente novamente.')
     } finally {
       setLoading(null)
     }
@@ -181,6 +192,16 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+
+      {/* ── Erro de checkout ───────────────────────────────────────── */}
+      {checkoutError && (
+        <div className="max-w-2xl mx-auto px-6 -mt-4 mb-2">
+          <div className="flex items-center gap-3 rounded-xl border border-destructive/40 bg-destructive/8 px-4 py-3 text-sm text-destructive">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {checkoutError}
+          </div>
+        </div>
+      )}
 
       {/* ── Pricing cards ──────────────────────────────────────────── */}
       <section className="py-16 px-6">
