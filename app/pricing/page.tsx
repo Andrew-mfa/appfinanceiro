@@ -92,7 +92,7 @@ export default function PricingPage() {
       })
 
       if (res.status === 401) {
-        router.push('/register?next=/pricing')
+        router.push('/login?next=/pricing')
         return
       }
 
