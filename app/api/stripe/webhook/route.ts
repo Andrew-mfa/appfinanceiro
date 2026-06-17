@@ -43,11 +43,18 @@ export async function POST(req: NextRequest) {
 
     case 'customer.subscription.updated': {
       const sub = event.data.object as Stripe.Subscription
-      const userId = sub.metadata?.supabase_user_id
-
-      if (!userId) break
-
       const isActive = sub.status === 'active' || sub.status === 'trialing'
+
+      // Detect plan from price ID
+      let activePlan = 'pro'
+      if (isActive) {
+        const priceId = sub.items.data[0]?.price?.id
+        const matched = priceId
+          ? Object.values(STRIPE_PLANS).find(p => p.priceId === priceId)
+          : null
+        if (matched) activePlan = matched.plan
+      }
+
       // current_period_end está no SubscriptionItem na API dahlia
       const periodEnd = sub.items.data[0]?.current_period_end
       const planExpiresAt = isActive || !periodEnd
@@ -56,7 +63,7 @@ export async function POST(req: NextRequest) {
 
       await admin.from('user_profiles')
         .update({
-          plan: isActive ? 'pro' : 'free',
+          plan: isActive ? activePlan : 'free',
           plan_expires_at: planExpiresAt,
           updated_at: new Date().toISOString(),
         })

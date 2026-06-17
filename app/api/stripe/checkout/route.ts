@@ -13,9 +13,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
     }
 
-    const { plan, annual } = await req.json() as { plan: 'pro' | 'ltd'; annual?: boolean }
+    const { plan, annual } = await req.json() as { plan: 'pro' | 'premium_plus'; annual?: boolean }
 
-    const planKey: PlanKey = plan === 'ltd' ? 'ltd' : annual ? 'pro_annual' : 'pro_monthly'
+    const planKey: PlanKey = plan === 'premium_plus'
+      ? (annual ? 'premium_plus_annual' : 'premium_plus_monthly')
+      : (annual ? 'pro_annual' : 'pro_monthly')
     const selected = STRIPE_PLANS[planKey]
 
     if (!selected?.priceId) {
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      mode: plan === 'ltd' ? 'payment' : 'subscription',
+      mode: 'subscription',
       line_items: [{ price: selected.priceId, quantity: 1 }],
       success_url: `${appUrl}/dashboard?checkout=success`,
       cancel_url: `${appUrl}/pricing?checkout=cancelled`,

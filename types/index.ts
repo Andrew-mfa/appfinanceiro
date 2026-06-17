@@ -42,7 +42,7 @@ export const CATEGORIES: Category[] = [
   'Outros',
 ]
 
-export type Plan = 'free' | 'pro' | 'ltd'
+export type Plan = 'free' | 'pro' | 'premium_plus'
 
 export interface UserProfile {
   user_id: string

@@ -31,6 +31,7 @@ const freeExcluded = [
   'IA financeira',
   'Exportar relatórios',
   'Metas financeiras',
+  'Chatbot WhatsApp',
 ]
 
 const proFeatures = [
@@ -40,13 +41,15 @@ const proFeatures = [
   'IA financeira',
   'Exportar relatórios CSV',
   'Metas financeiras',
+  '50 mensagens WhatsApp/mês',
 ]
 
-const ltdFeatures = [
+const premiumPlusFeatures = [
   'Tudo do plano Pro',
-  'Acesso vitalício',
-  'Atualizações futuras',
+  'WhatsApp ilimitado',
+  'Relatórios avançados',
   'Suporte prioritário',
+  'Acesso antecipado a novidades',
 ]
 
 const faqs = [
@@ -61,14 +64,14 @@ const faqs = [
       'Para sempre. O plano Free não tem data de expiração, não vira trial e não requer cartão de crédito. Você pode usar gratuitamente por tempo ilimitado dentro dos limites do plano.',
   },
   {
-    question: 'O que é o Lifetime Deal (LTD)?',
+    question: 'Qual a diferença entre Pro e Premium Plus?',
     answer:
-      'O LTD é uma oferta de lançamento onde você paga uma única vez e tem acesso vitalício ao Moneto Pro, incluindo todas as atualizações futuras e suporte prioritário. É a melhor opção para quem quer o máximo sem mensalidade.',
+      'O plano Pro é ideal para quem quer controle financeiro completo com IA e até 50 mensagens pelo chatbot WhatsApp por mês. O Premium Plus é para quem usa o WhatsApp intensamente — inclui mensagens ilimitadas, relatórios avançados e suporte prioritário.',
   },
   {
     question: 'Quais formas de pagamento são aceitas?',
     answer:
-      'Aceitamos cartão de crédito, débito, Pix e boleto bancário. Para assinaturas mensais/anuais, o pagamento é recorrente via cartão. O LTD pode ser pago via Pix ou cartão em parcela única.',
+      'Aceitamos cartão de crédito, débito e Pix. Para assinaturas mensais e anuais, o pagamento é recorrente via cartão. No plano anual você economiza 21% em comparação ao mensal.',
   },
 ]
 
@@ -76,15 +79,14 @@ export default function PricingPage() {
   const router = useRouter()
   const [annual, setAnnual] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [loading, setLoading] = useState<'pro' | 'ltd' | null>(null)
+  const [loading, setLoading] = useState<'pro' | 'premium_plus' | null>(null)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
-  // Verifica auth ao montar e dispara checkout pendente
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => {
       if (data.user) {
-        const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'ltd' | null
-        if (pendingPlan === 'pro' || pendingPlan === 'ltd') {
+        const pendingPlan = sessionStorage.getItem('pendingCheckout') as 'pro' | 'premium_plus' | null
+        if (pendingPlan === 'pro' || pendingPlan === 'premium_plus') {
           sessionStorage.removeItem('pendingCheckout')
           handleCheckout(pendingPlan)
         }
@@ -96,7 +98,10 @@ export default function PricingPage() {
   const proPrice = annual ? 'R$19' : 'R$24'
   const proNote = annual ? 'Cobrado R$228/ano' : 'Cobrado mensalmente'
 
-  async function handleCheckout(plan: 'pro' | 'ltd') {
+  const plusPrice = annual ? 'R$31' : 'R$39'
+  const plusNote = annual ? 'Cobrado R$372/ano' : 'Cobrado mensalmente'
+
+  async function handleCheckout(plan: 'pro' | 'premium_plus') {
     setLoading(plan)
     setCheckoutError(null)
 
@@ -315,43 +320,48 @@ export default function PricingPage() {
               </div>
             </div>
 
-            {/* LTD */}
-            <div className="card-premium p-7 flex flex-col relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/3 pointer-events-none" />
+            {/* Premium Plus */}
+            <div className="relative rounded-[calc(var(--radius)*1.4)] border-2 border-violet-500/60 bg-card p-7 flex flex-col shadow-[0_0_40px_rgba(124,58,237,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_56px_rgba(124,58,237,0.25)] overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-purple-500/3 pointer-events-none" />
 
               <div className="relative flex flex-col flex-1">
-                <div className="inline-flex items-center gap-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-semibold px-3 py-1 rounded-full w-fit mb-4">
-                  <Zap className="w-3 h-3" />
-                  Oferta de lançamento
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 whitespace-nowrap" style={{ top: '-1.875rem' }}>
+                  <span className="inline-flex items-center gap-1.5 bg-violet-600 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full shadow-lg shadow-violet-500/30">
+                    <Crown className="w-3 h-3 fill-white" />
+                    Mais recursos
+                  </span>
                 </div>
 
-                <div className="mb-6">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">Lifetime</p>
+                <div className="mb-6 mt-2">
+                  <p className="text-xs font-semibold uppercase tracking-widest mb-3 text-violet-500">Premium Plus</p>
                   <div className="flex items-end gap-1 mb-1">
-                    <span className="text-4xl font-bold tracking-tight">R$197</span>
+                    <span className="text-4xl font-bold tracking-tight">{plusPrice}</span>
+                    <span className="text-muted-foreground pb-1">/mês</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">Pagamento único, acesso para sempre</p>
+                  <p className="text-xs text-muted-foreground">{plusNote}</p>
+                  {annual && (
+                    <p className="text-xs text-violet-500 font-semibold mt-1">Economize R$96/ano</p>
+                  )}
                 </div>
 
                 <Button
-                  variant="outline"
-                  onClick={() => handleCheckout('ltd')}
+                  onClick={() => handleCheckout('premium_plus')}
                   disabled={loading !== null}
-                  className="w-full rounded-xl h-11 gap-1.5 border-amber-500/30 hover:border-amber-500/60 hover:bg-amber-500/5 mb-7"
+                  className="w-full rounded-xl h-11 gap-1.5 text-white border-0 mb-7 bg-violet-600 hover:bg-violet-700"
                 >
-                  {loading === 'ltd' ? (
+                  {loading === 'premium_plus' ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    <>Garantir LTD <Crown className="w-4 h-4 text-amber-500" /></>
+                    <>Assinar Premium Plus <Zap className="w-4 h-4" /></>
                   )}
                 </Button>
 
                 <div className="flex-1 space-y-3">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Tudo do Pro, mais:</p>
-                  {ltdFeatures.map((f) => (
+                  {premiumPlusFeatures.map((f) => (
                     <div key={f} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-amber-500/12 flex items-center justify-center shrink-0">
-                        <Check className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+                      <div className="w-5 h-5 rounded-full bg-violet-500/12 flex items-center justify-center shrink-0">
+                        <Check className="w-3 h-3 text-violet-500" />
                       </div>
                       <span className="text-sm font-medium">{f}</span>
                     </div>
